@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:9.0 http://infinispan.org/schemas/infinispan-config-9.0.xsd"
+        xmlns="urn:infinispan:config:9.0">
+    <jgroups>
+        <stack-file name="external-file" path="/default-configs/default-jgroups-udp.xml"/>
+    </jgroups>
+    <cache-container default-cache="default" statistics="true">
+        <transport initial-cluster-size="2" initial-cluster-timeout="30000" />
+        <replicated-cache name="repl" mode="ASYNC">
+            <transaction mode="BATCH"/>
+            <locking acquire-timeout="30000" concurrency-level="1000" striping="false"/>
+            <eviction strategy="LRU" size="10000"/>
+            <persistence passivation="false">
+                <string-keyed-jdbc-store xmlns="urn:infinispan:config:store:jdbc:9.0" shared="false">
+                    <!--<data-source jndi-url="java:jboss/datasources/Postgres" />-->
+                    <connection-pool connection-url="jdbc:postgresql:postgres" username="postgres" driver="org.postgresql.Driver" password="redhat"/>
+                    <string-keyed-table drop-on-exit="true" create-on-start="true" prefix="test">
+                        <id-column name="ID" type="VARCHAR(255)" />
+                        <data-column name="DATA" type="BYTEA" />
+                        <timestamp-column name="TIMESTAMP" type="BIGINT" />
+                    </string-keyed-table>
+                    <!--<property name="jdbc.upsert.disabled">true</property>-->
+                    <write-behind modification-queue-size="1024" thread-pool-size="4"/>
+                </string-keyed-jdbc-store>
+            </persistence>
+        </replicated-cache>
+    </cache-container>
+</infinispan>

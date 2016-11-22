@@ -9,23 +9,46 @@
 
 <infinispan
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:infinispan:config:8.2 http://infinispan.org/schemas/infinispan-config-8.2.xsd"
-        xmlns="urn:infinispan:config:8.2">
+        xsi:schemaLocation="urn:infinispan:config:9.0 http://infinispan.org/schemas/infinispan-config-9.0.xsd"
+        xmlns="urn:infinispan:config:9.0">
 
-   <cache-container default-cache="default" statistics="true">
-      <jmx domain="Infinispan" />
-      <local-cache name="stockTickers">
-         <locking isolation="REPEATABLE_READ" striping="false" />
-      </local-cache>
-      <local-cache name="wineCache">
-         <locking isolation="REPEATABLE_READ" acquire-timeout="500" />
-         <eviction size="500" />
-         <expiration interval="100" />
-         <store-as-binary keys="true" values="true" />
-      </local-cache>
-      <local-cache name="another">
-         <expiration lifespan="1000" max-idle="500" />
-      </local-cache>
-   </cache-container>
-
+    <cache-container default-cache="default" statistics="true">
+        <jmx domain="Infinispan"/>
+        <local-cache name="localCacheNoTx">
+            <persistence>
+                <string-keyed-jdbc-store xmlns="urn:infinispan:config:store:jdbc:9.0"
+                                         preload="true" read-only="false" purge="false"
+                                         dialect="POSTGRES" db-major-version="9" db-minor-version="5">
+                    <!--<connection-pool properties-file="/home/remerson/workspace/RedHat/infinispan/infinispan-jdbc-benchmark/src/main/resources/hikari.config"-->
+                                     <!--connection-url="jdbc:postgresql:postgres" username="postgres" driver="org.postgresql.Driver" password="redhat"/>-->
+                    <connection-pool connection-url="jdbc:postgresql:postgres" username="postgres" driver="org.postgresql.Driver" password="redhat"/>
+                    <!--<connection-pool properties-file="empty.properties"/>-->
+                    <string-keyed-table drop-on-exit="true" create-on-start="true" prefix="test_table2">
+                        <id-column name="id_column" type="VARCHAR(2048)"/>
+                        <data-column name="data_column" type="BYTEA"/>
+                        <timestamp-column name="timestamp_column" type="BIGINT"/>
+                    </string-keyed-table>
+                </string-keyed-jdbc-store>
+            </persistence>
+        </local-cache>
+        <!--<local-cache name="localCacheWithTxStore">-->
+            <!--<locking isolation="REPEATABLE_READ" striping="false" acquire-timeout="86400000" />-->
+            <!--<transaction transaction-manager-lookup="org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"-->
+            <!--mode="FULL_XA"-->
+            <!--locking="OPTIMISTIC"/>-->
+            <!--<persistence>-->
+                <!--<string-keyed-jdbc-store xmlns="urn:infinispan:config:store:jdbc:9.0"-->
+                                         <!--fetch-state="false" read-only="false" purge="true" shared="true" transactional="true"-->
+                                         <!--dialect="POSTGRES" db-major-version="9" db-minor-version="5">-->
+                    <!--<connection-pool connection-url="jdbc:postgresql:postgres" username="postgres"-->
+                                     <!--driver="org.postgresql.Driver" password="redhat"/>-->
+                    <!--<string-keyed-table drop-on-exit="true" create-on-start="true" prefix="test_table2">-->
+                        <!--<id-column name="id_column" type="VARCHAR(255)"/>-->
+                        <!--<data-column name="data_column" type="VARCHAR(255)"/>-->
+                        <!--<timestamp-column name="timestamp_column" type="BIGINT"/>-->
+                    <!--</string-keyed-table>-->
+                <!--</string-keyed-jdbc-store>-->
+            <!--</persistence>-->
+        <!--</local-cache>-->
+    </cache-container>
 </infinispan>
