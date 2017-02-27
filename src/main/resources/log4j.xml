@@ -18,11 +18,16 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="org.infinispan.marshaller" level="WARN"/>
-        <Logger name="org.infinispan.remoting.transport" level="DEBUG"/>
-        <Logger name="org.infinispan.conflict.resolution" level="ALL"/>
-        <Logger name="com.mchange" level="WARN"/>
-        <Logger name="org.jgroups" level="DEBUG"/>
+        <!--<Logger name="org.infinispan.marshaller" level="WARN"/>-->
+        <!--<Logger name="org.infinispan.remoting.transport" level="DEBUG"/>-->
+        <!--<Logger name="org.infinispan.marshall.core" level="ALL"/>-->
+        <!--<Logger name="com.mchange" level="WARN"/>-->
+        <!--<Logger name="org.jgroups" level="DEBUG"/>-->
+        <Logger name="org.infinispan.conflict.resolution.Test" level="ALL"/>
+        <!--<Logger name="org.infinispan.statetransfer" level="ALL"/>-->
+        <!--<Logger name="org.infinispan.topology" level="ALL"/>-->
+        <!--<Logger name="org.infinispan.distribution" level="DEBUG"/>-->
+        <!--<Logger name="org.jgroups.protocols" level="DEBUG"/>-->
 
         <Root>
             <AppenderRef ref="STDOUT"/>

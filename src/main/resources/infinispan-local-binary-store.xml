@@ -14,19 +14,19 @@
 
     <cache-container default-cache="default" statistics="true">
         <jmx domain="Infinispan"/>
-        <local-cache name="localCacheNoTx">
+        <local-cache name="test">
             <persistence>
-                <string-keyed-jdbc-store xmlns="urn:infinispan:config:store:jdbc:8.0"
+                <binary-keyed-jdbc-store xmlns="urn:infinispan:config:store:jdbc:8.0"
                                          fetch-state="false" read-only="false" purge="true"
                                          dialect="POSTGRES">
                     <connection-pool connection-url="jdbc:postgresql:postgres" username="postgres"
-                                      password="redhat"/>
-                    <string-keyed-table drop-on-exit=" true" create-on-start="true" prefix="test_table">
+                                     driver="org.postgresql.Driver" password="redhat"/>
+                    <binary-keyed-table drop-on-exit="false" create-on-start="true" prefix="binary_table">
                         <id-column name="id_column" type="VARCHAR(255)"/>
-                        <data-column name="data_column" type="VARCHAR(255)"/>
-                        <timestamp-column name="timestamp_column" type="BIGINT"/>
-                    </string-keyed-table>
-                </string-keyed-jdbc-store>
+                        <data-column name="datum_column" type="BYTEA"/>
+                        <timestamp-column name="version_column" type="BIGINT"/>
+                    </binary-keyed-table>
+                </binary-keyed-jdbc-store>
             </persistence>
         </local-cache>
     </cache-container>

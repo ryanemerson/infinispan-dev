@@ -2,99 +2,51 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.set</groupId>
-    <artifactId>infinispan-jdbc-benchmark</artifactId>
+    <artifactId>infinispan-jdbc-migrator</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <version.infinispan>9.0.0-SNAPSHOT</version.infinispan>
-        <version.infinispan-protostuff>1.0.0-SNAPSHOT</version.infinispan-protostuff>
-        <!--<version.infinispan>8.2.3.Final</version.infinispan>-->
-        <!--<version.infinispa>8.2.4-SNAPSHOT</version.infinispa>-->
-        <version.protostuff>1.5.2</version.protostuff>
+        <version.embeded>8.2.6.Final</version.embeded>
+        <version.tools>9.0.0-SNAPSHOT</version.tools>
     </properties>
 
     <dependencies>
-
         <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-runtime</artifactId>
-            <version>${version.protostuff}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-runtime-registry</artifactId>
-            <version>${version.protostuff}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-core</artifactId>
-            <version>${version.protostuff}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-collectionschema</artifactId>
-            <version>${version.protostuff}</version>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>${version.embeded}</version>
         </dependency>
 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-core</artifactId>
-            <version>${version.infinispan}</version>
+            <version>${version.embeded}</version>
+            <type>test-jar</type>
         </dependency>
+
+
         <!--<dependency>-->
             <!--<groupId>org.infinispan</groupId>-->
-            <!--<artifactId>infinispan-embedded</artifactId>-->
-            <!--<version>${version.infinispan}</version>-->
+            <!--<artifactId>infinispan-tools</artifactId>-->
+            <!--<version>${version.tools}</version>-->
         <!--</dependency>-->
-
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-marshaller-protostuff</artifactId>
-            <version>${version.infinispan-protostuff}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.3-1100-jdbc41</version>
+            <version>9.4.1212</version>
         </dependency>
 
         <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>2.6</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.6</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- enforce java 1.8 and maven 3 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>enforce-java</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[1.8,)</version>
-                                </requireJavaVersion>
-                                <requireMavenVersion>
-                                    <version>[3.0.0,)</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- by default, compile to JDK 1.8 compatibility -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -105,38 +57,6 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <!--<phase>process-classes</phase>-->
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!--<mainClass>org.jboss.set.JDBCBenchmark</mainClass>-->
-                    <!--<mainClass>org.jboss.set.ReplicatedCache</mainClass>-->
-                    <mainClass>org.jboss.set.ConflictResolutionManager</mainClass>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>JBoss.org Public Repository</id>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-        </repository>
-    </repositories>
 </project>

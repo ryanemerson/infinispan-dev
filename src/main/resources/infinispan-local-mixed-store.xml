@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+   This is just a very simplistic example configuration file.  For more information, please see
+   http://docs.jboss.org/infinispan/8.2/configdocs/
+
+-->
+
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:8.2 http://infinispan.org/schemas/infinispan-config-8.2.xsd"
+        xmlns="urn:infinispan:config:8.2">
+
+    <cache-container default-cache="default" statistics="true">
+        <jmx domain="Infinispan"/>
+        <local-cache name="test">
+            <persistence>
+                <mixed-keyed-jdbc-store xmlns="urn:infinispan:config:store:jdbc:8.0"
+                                         fetch-state="false" read-only="false" purge="true"
+                                         dialect="POSTGRES">
+                    <connection-pool connection-url="jdbc:postgresql:postgres" username="postgres"
+                                     driver="org.postgresql.Driver" password="redhat"/>
+                    <binary-keyed-table drop-on-exit="false" create-on-start="true" prefix="binary_table">
+                        <id-column name="id_column" type="VARCHAR(255)"/>
+                        <data-column name="datum_column" type="BYTEA"/>
+                        <timestamp-column name="version_column" type="BIGINT"/>
+                    </binary-keyed-table>
+                    <string-keyed-table drop-on-exit="false" create-on-start="true" prefix="string_table">
+                        <id-column name="id_column" type="VARCHAR(255)"/>
+                        <data-column name="datum_column" type="BYTEA"/>
+                        <timestamp-column name="version_column" type="BIGINT"/>
+                    </string-keyed-table>
+                    <!--<property name="infinispan.jdbc.upsert.disabled">true</property>-->
+                    <!--<property name="infinispan.jdbc.indexing.disabled">true</property>-->
+                </mixed-keyed-jdbc-store>
+            </persistence>
+        </local-cache>
+    </cache-container>
+</infinispan>
